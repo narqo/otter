@@ -201,6 +201,9 @@ func (c *Cache[K, V]) cleanup() {
 			c.hashmap.EvictNode(n)
 		}
 
+		for i := 0; i < len(expired); i++ {
+			expired[i] = nil
+		}
 		expired = expired[:0]
 	}
 }
@@ -262,7 +265,14 @@ func (c *Cache[K, V]) process() {
 				c.hashmap.EvictNode(n)
 			}
 
+			for j := 0; j < len(buffer); j++ {
+				buffer[j] = node.WriteTask[K, V]{}
+			}
 			buffer = buffer[:0]
+
+			for j := 0; j < len(deleted); j++ {
+				deleted[j] = nil
+			}
 			deleted = deleted[:0]
 		}
 	}
